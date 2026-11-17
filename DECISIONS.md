@@ -2,8 +2,6 @@
 
 ## Dates and rule precedence
 
-The task brief says Thursday 19 November 2026, 10:00 AM IST; this resolves the email's Wednesday label. Code freezes then. Blind-test outputs are due at noon IST.
-
 New items are handled before grouping and the ordered section 5 rules. Capex takes precedence over contract POs. Supplier status is a global eligibility constraint. A contract considered for Capex valuation does not consume ceiling because no contract PO is placed.
 
 Requirement date is the first line's date. Creation-time sorting uses PR number and numeric line number to break ties. Clubbing uses inclusive calendar-date differences (14 and ±7); consolidation uses inclusive elapsed time (24 hours). Neither window rolls forward. A line chooses the earliest eligible existing group. A requirement chooses the earliest eligible PO. All timestamps are interpreted as company-local, naive timestamps in the input; audit events use UTC. Chat timestamps use Asia/Kolkata.
@@ -48,4 +46,4 @@ AI may propose a complete policy from a document or chat description. The server
 
 Approval of a consolidated PO approves all its member requirements together and creates a persisted purchasing document. Sourcing approvals create an internal RFQ/RFP record. No external supplier communication or ordering integration is implied. Overrides require a replacement route and written reason; PO overrides also require an Active supplier and price. Contract PO overrides must be reprocessed through the contract engine to preserve ceiling controls. The original engine output and blind-test CSV stay immutable; override documents and audit events retain the replacement decision separately.
 
-This small deployment uses buyer and requester roles with separately configured shared passwords and HTTP Basic authentication sent over Render HTTPS. Role names identify actors; this is not individual enterprise identity. Browser credentials stay in sessionStorage. There is no default hosted password. Local no-password mode is for development only. Requesters can create chat PRs and cannot access buyer APIs. Cross-origin writes are rejected. No task kit or runtime database is in Git or the Docker build context. Render uses a persistent disk and a single instance; this is intentionally not a horizontally scaled procurement system.
+This small deployment uses buyer and requester roles with separately configured shared passwords and HTTP Basic authentication over HTTPS. Role names identify actors; this is not individual enterprise identity. Browser credentials stay in sessionStorage. There is no default hosted password. Local no-password mode is for development only. Requesters can create chat PRs and cannot access buyer APIs. Cross-origin writes are rejected. No task kit or runtime database is in Git or the Docker build context. The hosted architecture uses persistent storage and a single instance; this is intentionally not a horizontally scaled procurement system.

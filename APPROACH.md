@@ -8,6 +8,6 @@ The procurement engine is a pure deterministic function. It uses Decimal arithme
 
 An optional OpenRouter Chat Completions integration interprets chat fields and policy/amendment documents. Configure OPENROUTER_API_KEY and optionally OPENROUTER_MODEL on the server. The default model is openai/gpt-4.1-mini; change the environment variable if a different available model is preferred. AI never computes procurement outcomes or directly activates policies. Structured outputs are validated, source changes are shown, and a buyer must approve policy drafts. Without a key, catalog-based chat and complete JSON policy editing/upload remain available. Inputs supplied to that optional service include the relevant catalog and request text, or the base policy and amendment text.
 
-The interface focuses on conversational employee intake and a buyer's next action: import, process, inspect evidence, approve, or record an override. The Render blueprint uses Docker, a persistent SQLite disk, and disabled automatic deployment for the build freeze.
+The interface focuses on conversational employee intake and a buyer's next action: import, process, inspect evidence, approve, or record an override. The application uses a Docker image and persistent SQLite storage.
 
 Validation: synthetic engine boundary tests and in-process tests of the actual API dispatcher, plus private sample-batch verification. See README for commands and the verification limitations. No task-specific PR answers are encoded in the engine. The implementation plan and original kit remain ignored by Git.

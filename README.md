@@ -7,16 +7,11 @@ A full-stack procurement app with conversational PR intake, deterministic policy
 Requires Python 3.12+. The core uses the standard library. Install the pinned runtime dependencies for reliable PDF extraction and timezone support across Linux, Windows, and Docker.
 
 ```bash
+python3 -m pip install -r requirements.txt
 python3 -m app.server
 ```
 
 Open **http://localhost:8000**. Local mode permits buyer access when `APP_PASSWORD` is unset. Stop with Ctrl+C. All data persists in ignored `private_data/app.sqlite3`.
-
-Install runtime dependencies before deploying or running on a machine without system timezone data:
-
-```bash
-python3 -m pip install -r requirements.txt
-```
 
 Alternatively, with Docker Desktop running and WSL integration enabled:
 
@@ -63,63 +58,13 @@ The demo uses fictional SITE-A/SITE-B and DEMO-A identifiers unrelated to the ki
 
 `OPENROUTER_API_KEY` enables natural-language chat interpretation and policy/amendment interpretation. Set it on the server, never in frontend code or Git. `OPENROUTER_MODEL` defaults to `openai/gpt-4.1-mini`. Without a key, deterministic catalog chat and complete JSON policy upload/editing remain functional. Natural-language policy changes deliberately fail with a clear message rather than guessing rules. JSON policies are executable data interpreted by a bounded predicate engine, not uploaded code.
 
-## Deploy to Render
-
-The included [render.yaml](render.yaml) defines a Docker web service, health check, persistent disk and disabled automatic deployments. This blueprint selects a **paid service with a persistent disk** so uploads and run snapshots survive restart; review Render's current charges before creating it. See [Render's Blueprint reference](https://render.com/docs/blueprint-spec) and [persistent disk documentation](https://render.com/docs/disks).
-
-1. Create a **public GitHub repository** and push the source files. Keep the kit, implementation plan, credentials, database and private exports excluded. `git status --short --ignored` shows the exclusions. Check your configured remote with `git remote -v`. Create the GitHub repository empty (without a generated README) before pushing this source.
-2. In Render, select **New → Blueprint**, connect that repository, and apply `render.yaml`. The blueprint is the supported configuration; do not deploy this as a static site.
-3. Set `APP_PASSWORD` for the **buyer** login and a different `REQUESTER_PASSWORD` for the **requester** login. Set `OPENROUTER_API_KEY` to enable natural-language policy amendments. Keep `DATABASE_PATH=/var/data/app.sqlite3`. Render supplies `PORT`.
-4. Deploy, then open the returned `https://…onrender.com` URL. Upload the private kit through the UI. Verify a sample batch, chat confirmation, a document amendment, and downloaded CSVs in the deployed app.
-5. Keep the service and persistent disk available through the review. Share buyer access privately with the evaluators if needed. Do not place login passwords in the public README.
-
-Auto-deploy is disabled to protect the frozen build. Make any required deployments manually **before** the deadline. Do not change code or deploy different code during the blind test.
-
-The local environment used to build this app blocks socket creation, package-registry networking, and Docker's WSL integration. The actual API dispatcher, database operations and engine were tested in-process; a real browser session, Docker image build, live AI call and hosted deployment still need verification in an unrestricted environment. These checks do not substitute for the hosted smoke test below.
-
-## Before the first push and deployment
-
-Review the public file list before staging. Original kit PDFs/CSVs, newly downloaded PDF/CSV/XLS inputs, `.env`, local databases and the implementation plan are ignored. Synthetic demo CSVs and the three required `submission/` CSVs are explicit exceptions. Never force-add private task inputs.
-
-```bash
-git status --short --ignored
-git add .
-git diff --cached --name-only
-git diff --cached --check
-```
-
-Inspect that list, then create the initial commit and push to your own public repository. Do not publish passwords or API keys. Commit the source before connecting the Render blueprint.
-
-After deploying, verify these steps before submitting your links:
-
-1. `/health` returns `{"status":"ok"}`; the main page loads and buyer login works.
-2. Upload the private datasets and PDF-only contracts; process the sample batch and check line counts, exceptions and CSV columns.
-3. Complete a chat PR, review it, approve it, and inspect its persisted purchasing document.
-4. Upload an amendment, review/approve it, and rerun the same batch from the baseline snapshot. Confirm changed decisions and stable baseline replay.
-5. Restart the Render service and confirm uploads, policies and saved runs persist. Test requester access separately.
-6. Verify a live OpenRouter request using your server-side key. The default model is accessed through OpenRouter; it does not require a separate OpenAI key. A funded/eligible OpenRouter account and a JSON-capable model are required.
-
-GitHub Actions runs the tests, JavaScript syntax check and Docker build for source changes. A passing local test suite alone does not verify the image build or live service.
-
-## Blind-test runbook
-
-Build freeze: **Thursday 19 November 2026, 10:00 AM IST** (04:30 UTC). Submit your public repository and working hosted link using the organizer's form before then.
-
-1. Import replacement master/contract data if provided. Upload the blind PR batch and select **v5.0**. Label it Run 1 and process. Download **dev_juneja__run1.csv**.
-2. Upload the amendment in Policy versions, review its extracted rules/effective date, preview impact, and approve it. Use the app only; do not change code.
-3. Re-upload the same PR batch in Buyer workspace, select the amended policy, and choose **Run 1's snapshot** as starting data. Process Run 2 and download **dev_juneja__run2.csv**.
-4. In Preferred suppliers, choose the requested as-of date, relevant approved policy, and the same data snapshot. Download **dev_juneja__preferred.csv**.
-5. Place only these three outputs in `submission/`. Inspect the Git diff, then commit and push those CSVs before **12:00 noon IST** (06:30 UTC). Do not commit private input files or code changes.
-
-Batch export reflects proposed engine decisions; you do not need to approve every PO to produce the blind-test outputs. Runs have isolated ceiling ledgers. Run 2 must use Run 1's starting snapshot for a fair comparison.
-
 ## API
 
 Buyer routes require HTTP Basic auth when `APP_PASSWORD` is configured. Use username `buyer`; employee chat uses username `requester`. Each role has its configured password. Local development can omit credentials when `APP_PASSWORD` is absent. Hosted configuration refuses to run authenticated actions without an explicit password.
 
 | Route | Purpose |
 |---|---|
-| `GET /health` | Deployment health |
+| `GET /health` | Service health |
 | `GET /api/state` | Role, dataset summaries, policy versions, saved runs |
 | `POST /api/data` | `{kind,csv}` validates and replaces a master dataset |
 | `POST /api/document` | `{name,base64}` extracts document text |
@@ -157,4 +102,4 @@ python3 -m compileall -q app
 
 The synthetic suite covers threshold and time boundaries, rule precedence, cumulative contract ceilings, replay isolation, supplier eligibility, date-aware policy selection, amendment preview/approval/replay, auth, overrides and purchasing-document persistence. Private kit checks account for every sample line, check worked decisions and compare the three example ranking orders. No supplied kit data is committed as test fixtures.
 
-See [DECISIONS.md](DECISIONS.md) for ambiguity resolutions and ranking details, and [APPROACH.md](APPROACH.md) for architecture and actual AI usage. The implementation plan is intentionally ignored.
+See [DECISIONS.md](DECISIONS.md) for ambiguity resolutions and ranking details, and [APPROACH.md](APPROACH.md) for architecture and actual AI usage.

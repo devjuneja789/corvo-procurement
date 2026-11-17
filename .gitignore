@@ -45,3 +45,6 @@ __pycache__/
 # Only independently synthetic fixtures and required final submissions may be public
 !/demo/*.csv
 !/submission/*.csv
+
+# Personal hosting and submission instructions
+/PRIVATE_OPERATIONS.md
