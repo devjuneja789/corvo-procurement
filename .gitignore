@@ -1,0 +1,47 @@
+# Private implementation planning
+/IMPLEMENTATION_PLAN.md
+
+# Supplied challenge materials: do not publish
+/Cantill_FullStack_Task_Brief.pdf
+/Corvo_Procurement_Policy.pdf
+/Worked_Examples.pdf
+/README.txt
+/master_data/
+/contracts/
+/pr_batches/
+
+# Local uploaded data and generated private artifacts
+/uploads/
+/private_data/
+/local_exports/
+*.sqlite
+*.sqlite3
+
+# Secrets and local tooling
+.env
+.env.*
+!.env.example
+.aws/
+.codex/
+.agents/
+node_modules/
+.next/
+dist/
+
+# Python and local verification
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+/coverage/
+
+# Newly downloaded private challenge inputs/exports, wherever saved
+*.pdf
+*.csv
+*.xlsx
+*.xls
+*.sqlite3-*
+*.sqlite-*
+# Only independently synthetic fixtures and required final submissions may be public
+!/demo/*.csv
+!/submission/*.csv

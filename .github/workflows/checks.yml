@@ -1,0 +1,31 @@
+name: Checks
+on:
+  push:
+    paths-ignore:
+      - 'submission/**'
+  pull_request:
+    paths-ignore:
+      - 'submission/**'
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -v
+      - run: node --check static/app.js
+      - run: docker build -t corvo-check .
+      - name: Smoke-test container startup and health
+        run: |
+          docker run -d --name corvo-smoke -p 127.0.0.1:8000:8000 -e RENDER=true -e APP_PASSWORD=ci-only corvo-check
+          curl --fail --retry 15 --retry-connrefused --retry-delay 1 http://localhost:8000/health
+          curl --fail --output /dev/null http://localhost:8000/
+      - name: Container logs
+        if: failure()
+        run: docker logs corvo-smoke || true

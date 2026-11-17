@@ -1,0 +1,2 @@
+contract_id,supplier_id,supplier_name,start_date,end_date,value_cap,consumed_value
+C1,V-A,V-A,2026-01-01,2026-12-31,200000,0

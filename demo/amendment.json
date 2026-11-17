@@ -1,0 +1,119 @@
+{
+  "version": "demo-6.0",
+  "effective_date": "2026-11-01",
+  "windows": {
+    "clubbing_days": 14,
+    "need_by_days": 7,
+    "consolidation_hours": 24,
+    "history_days": 365,
+    "preferred_days": 548
+  },
+  "ranking": {
+    "frequency": 35,
+    "recency": 25,
+    "contract": 15,
+    "delivery": 15,
+    "quality": 10
+  },
+  "rules": [
+    {
+      "id": "demo-amendment",
+      "when": {
+        "all": [
+          {
+            "field": "plant",
+            "op": "eq",
+            "value": "SITE-B"
+          },
+          {
+            "field": "category",
+            "op": "eq",
+            "value": "Parts"
+          }
+        ]
+      },
+      "route": "RFQ",
+      "suggest": 3
+    },
+    {
+      "id": "5.1",
+      "when": {
+        "field": "item_type",
+        "op": "eq",
+        "value": "Capex"
+      },
+      "route": "CAPEX_SOURCING",
+      "suggest": 5
+    },
+    {
+      "id": "5.2",
+      "when": {
+        "field": "has_contract",
+        "op": "eq",
+        "value": true
+      },
+      "route": "CONTRACT_PO"
+    },
+    {
+      "id": "5.3",
+      "when": {
+        "all": [
+          {
+            "field": "emergency",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "field": "value",
+            "op": "lte",
+            "value": 500000
+          },
+          {
+            "field": "has_history",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "route": "EMERGENCY_PO"
+    },
+    {
+      "id": "5.4",
+      "when": {
+        "all": [
+          {
+            "field": "value",
+            "op": "lt",
+            "value": 200000
+          },
+          {
+            "field": "has_history",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "route": "SPOT_PO"
+    },
+    {
+      "id": "5.5",
+      "when": {
+        "field": "value",
+        "op": "lt",
+        "value": 1000000
+      },
+      "route": "RFQ",
+      "suggest": 3
+    },
+    {
+      "id": "5.6",
+      "when": {
+        "field": "value",
+        "op": "gte",
+        "value": 1000000
+      },
+      "route": "RFP",
+      "suggest": 5
+    }
+  ]
+}

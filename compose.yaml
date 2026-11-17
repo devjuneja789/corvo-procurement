@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      APP_PASSWORD: ${APP_PASSWORD:-}
+      REQUESTER_PASSWORD: ${REQUESTER_PASSWORD:-}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-openai/gpt-4.1-mini}
+      DATABASE_PATH: /var/data/app.sqlite3
+    volumes:
+      - procurement-data:/var/data
+    restart: unless-stopped
+volumes:
+  procurement-data:

@@ -1,0 +1,3 @@
+supplier_id,name,city,categories,status,on_time_pct,quality_rating
+V-A,Vendor A,Delhi,Parts,Active,90,4.5
+V-B,Vendor B,Mumbai,Parts,Active,95,4

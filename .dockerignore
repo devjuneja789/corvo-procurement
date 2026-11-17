@@ -1,0 +1,13 @@
+*
+!app/
+!app/**
+!static/
+!static/**
+!scripts/
+!scripts/**
+!demo/
+!demo/**
+!requirements.txt
+!Dockerfile
+**/__pycache__
+**/*.pyc

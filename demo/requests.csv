@@ -1,0 +1,4 @@
+pr_no,pr_line,created_at,requester,department,plant,item_code,description,quantity,uom,estimated_unit_price,need_by_date,urgency
+P-1,1,2026-11-01 09:00,Tester,Ops,SITE-A,DEMO-A,Industrial widget 20mm,1,NOS,100,2026-11-20,Normal
+P-2,1,2026-11-02 10:00,Tester,Ops,SITE-B,DEMO-A,Industrial widget 20mm,2000,NOS,100,2026-11-20,Normal
+P-3,1,2026-11-01 09:00,Tester,Ops,SITE-A,,Custom inspection device,1,NOS,1200,2026-11-20,Normal
