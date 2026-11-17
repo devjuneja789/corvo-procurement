@@ -24,8 +24,17 @@ jobs:
       - name: Smoke-test container startup and health
         run: |
           docker run -d --name corvo-smoke -p 127.0.0.1:8000:8000 -e RENDER=true -e APP_PASSWORD=ci-only corvo-check
-          curl --fail --retry 15 --retry-connrefused --retry-delay 1 http://localhost:8000/health
-          curl --fail --output /dev/null http://localhost:8000/
+          # Docker publishes the port before Python necessarily starts listening.
+          # Retry resets as well as refusals, but fail after a bounded startup window.
+          curl --fail --show-error --silent \
+            --connect-timeout 2 --max-time 5 \
+            --retry 15 --retry-all-errors --retry-delay 1 --retry-max-time 60 \
+            --output /tmp/corvo-health.json http://127.0.0.1:8000/health
+          python -c 'import json; assert json.load(open("/tmp/corvo-health.json"))["status"] == "ok"'
+          curl --fail --output /dev/null http://127.0.0.1:8000/
       - name: Container logs
         if: failure()
         run: docker logs corvo-smoke || true
+      - name: Clean up container
+        if: always()
+        run: docker rm -f corvo-smoke || true
