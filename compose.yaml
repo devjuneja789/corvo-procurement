@@ -8,6 +8,7 @@ services:
       REQUESTER_PASSWORD: ${REQUESTER_PASSWORD:-}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-openai/gpt-4.1-mini}
+      DATABASE_URL: ${DATABASE_URL:-}
       DATABASE_PATH: /var/data/app.sqlite3
     volumes:
       - procurement-data:/var/data

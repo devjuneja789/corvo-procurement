@@ -2,7 +2,7 @@ services:
   - type: web
     name: corvo-procurement
     runtime: docker
-    plan: starter
+    plan: free
     healthCheckPath: /health
     autoDeployTrigger: 'off'
     envVars:
@@ -14,9 +14,5 @@ services:
         sync: false
       - key: OPENROUTER_MODEL
         value: openai/gpt-4.1-mini
-      - key: DATABASE_PATH
-        value: /var/data/app.sqlite3
-    disk:
-      name: procurement-data
-      mountPath: /var/data
-      sizeGB: 1
+      - key: DATABASE_URL
+        sync: false

@@ -9,7 +9,7 @@ from test_engine import fixture,line
 
 class APItests(unittest.TestCase):
  def setUp(self):
-  self.temp=tempfile.TemporaryDirectory();self.env=patch.dict(os.environ,{'DATABASE_PATH':self.temp.name+'/app.sqlite3','APP_PASSWORD':'test-buyer','REQUESTER_PASSWORD':'test-employee','OPENROUTER_API_KEY':''});self.env.start();store.init()
+  self.temp=tempfile.TemporaryDirectory();self.env=patch.dict(os.environ,{'DATABASE_URL':'','DATABASE_PATH':self.temp.name+'/app.sqlite3','APP_PASSWORD':'test-buyer','REQUESTER_PASSWORD':'test-employee','OPENROUTER_API_KEY':''});self.env.start();store.init()
   with store.connect() as db:
    for kind,rows in fixture().items():store.save_data(db,kind,rows,'test')
  def tearDown(self):self.env.stop();self.temp.cleanup()

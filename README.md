@@ -11,7 +11,7 @@ python3 -m pip install -r requirements.txt
 python3 -m app.server
 ```
 
-Open **http://localhost:8000**. Local mode permits buyer access when `APP_PASSWORD` is unset. Stop with Ctrl+C. All data persists in ignored `private_data/app.sqlite3`.
+Open **http://localhost:8000**. Local mode permits buyer access when `APP_PASSWORD` is unset. Stop with Ctrl+C. By default, data persists in ignored `private_data/app.sqlite3`. Setting `DATABASE_URL` selects PostgreSQL instead; `DATABASE_PATH` applies only to SQLite.
 
 Alternatively, with Docker Desktop running and WSL integration enabled:
 
@@ -19,7 +19,7 @@ Alternatively, with Docker Desktop running and WSL integration enabled:
 docker compose up --build
 ```
 
-Docker stores the database in the `procurement-data` volume. Copy `.env.example` to `.env` before Docker startup to set passwords and the optional AI key. For plain Python, set the same variables in your terminal environment; Python does not automatically load `.env`.
+With SQLite, Docker stores the database in the `procurement-data` volume. With PostgreSQL, records are stored in the database selected by `DATABASE_URL`. Copy `.env.example` to `.env` before Docker startup to set passwords and the optional AI key. For plain Python, set the same variables in your terminal environment; Python does not automatically load `.env`.
 
 ## Load data
 

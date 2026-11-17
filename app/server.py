@@ -220,7 +220,7 @@ class Handler(BaseHTTPRequestHandler):
       result=run_save(db,[line],policy,'Chat request '+line['pr_no'],live_data,actor)
       if result['summary']['not_processed']:raise ValueError(result['rows'][0]['reason'])
       state={};store.audit(db,'pr_created',actor,{'pr_no':line['pr_no'],'run_id':result['id']})
-     db.execute('INSERT OR REPLACE INTO chats VALUES(?,?)',(key,json.dumps(state)));return self.reply({'session_id':sid,'message':message,'fields':state,'run_id':result['id'] if result else None})
+     db.execute('INSERT INTO chats(id,body) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET body=excluded.body',(key,json.dumps(state)));return self.reply({'session_id':sid,'message':message,'fields':state,'run_id':result['id'] if result else None})
     return self.reply({'error':'Endpoint not found'},404)
   except PermissionError as e:self.reply({'error':str(e)},401)
   except (ValueError,KeyError,TypeError,ArithmeticError) as e:self.reply({'error':str(e)},400)
@@ -229,6 +229,7 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
  if os.environ.get('RENDER') and not os.environ.get('APP_PASSWORD','').strip():raise ValueError('Set APP_PASSWORD in Render before starting the service')
+ if os.environ.get('RENDER') and not os.environ.get('DATABASE_URL','').strip():raise ValueError('Set DATABASE_URL to a persistent PostgreSQL database before starting on Render')
  ZoneInfo('Asia/Kolkata')
  store.init();port=int(os.environ.get('PORT','8000'));print(f'Procurement app: http://localhost:{port}',flush=True);ThreadingHTTPServer(('0.0.0.0',port),Handler).serve_forever()
 if __name__=='__main__':main()

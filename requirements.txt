@@ -1,3 +1,4 @@
 # Docker/runtime PDF extraction and portable IANA timezone data.
 pypdf==7.1.0
 tzdata==2025.2
+psycopg[binary]==3.2.9
